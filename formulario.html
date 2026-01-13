@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro de Cliente - GTLINK</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .form-container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo img {
+      max-width: 180px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .planos {
+      margin-top: 10px;
+    }
+
+    .plano {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .plano input {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <div class="logo">
+    <!-- SUBSTITUA PELO LOGO DA GTLINK -->
+    <img src="https://i.postimg.cc/90C0Qqr4/1000176872.png">
+  </div>
+
+  <h2>Cadastro de Cliente</h2>
+
+  <form id="cadastroForm">
+
+    <label>Nome completo</label>
+    <input type="text" name="nome_completo" required>
+
+    <label>CPF</label>
+    <input type="text" name="cpf" maxlength="14" required>
+
+    <label>Data de nascimento</label>
+    <input type="text" name="data_nascimento" placeholder="DD/MM/AAAA" maxlength="10" required>
+
+    <label>Email</label>
+    <input type="email" name="email" required>
+
+    <label>Endereço</label>
+    <input type="text" name="endereco" required>
+
+    <label>CEP</label>
+    <input type="text" name="cep" maxlength="9" required>
+
+    <label>Telefone</label>
+    <input type="text" name="telefone" maxlength="15" required>
+
+    <label>Dia de vencimento</label>
+    <input type="number" name="dia_vencimento" min="1" max="31" required>
+
+    <label>Plano desejado</label>
+    <div class="planos">
+
+      <div class="plano">
+        <label>
+          <input type="radio" name="plano" value="200MB - R$70 - Fibra Óptica" required>
+          🛜 <strong>200MB</strong> — R$ 70,00<br>
+          100% Fibra Óptica
+        </label>
+      </div>
+
+      <div class="plano">
+        <label>
+          <input type="radio" name="plano" value="400MB - R$80 - Fibra Óptica">
+          🛜 <strong>400MB</strong> — R$ 80,00<br>
+          100% Fibra Óptica
+        </label>
+      </div>
+
+      <div class="plano">
+        <label>
+          <input type="radio" name="plano" value="700MB - R$100 - Fibra Óptica + GTFLIX">
+          🛜 <strong>700MB</strong> — R$ 100,00<br>
+          100% Fibra Óptica<br>
+          🎁 Brinde: <strong>GTFLIX</strong>
+        </label>
+      </div>
+
+    </div>
+
+    <button type="submit">Enviar cadastro</button>
+
+  </form>
+</div>
+
+<script>
+  // Máscara CPF
+  document.querySelector('input[name="cpf"]').addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    v = v.replace(/(\d{3})(\d)/, '$1.$2')
+         .replace(/(\d{3})(\d)/, '$1.$2')
+         .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    e.target.value = v;
+  });
+
+  // Máscara Data
+  document.querySelector('input[name="data_nascimento"]').addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+    if (v.length >= 5) {
+      e.target.value = `${v.slice(0,2)}/${v.slice(2,4)}/${v.slice(4)}`;
+    } else if (v.length >= 3) {
+      e.target.value = `${v.slice(0,2)}/${v.slice(2)}`;
+    } else {
+      e.target.value = v;
+    }
+  });
+
+  // Máscara CEP
+  document.querySelector('input[name="cep"]').addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 8);
+    if (v.length > 5) {
+      v = v.replace(/(\d{5})(\d)/, '$1-$2');
+    }
+    e.target.value = v;
+  });
+
+  // Máscara Telefone
+  document.querySelector('input[name="telefone"]').addEventListener('input', e => {
+    let v = e.target.value.replace(/\D/g, '').slice(0, 11);
+    if (v.length > 6) {
+      v = v.replace(/(\d{2})(\d{5})(\d)/, '($1) $2-$3');
+    } else if (v.length > 2) {
+      v = v.replace(/(\d{2})(\d)/, '($1) $2');
+    }
+    e.target.value = v;
+  });
+
+  // Envio para o n8n
+  document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = Object.fromEntries(new FormData(e.target).entries());
+
+    const response = await fetch('COLE_AQUI_URL_DO_WEBHOOK_N8N', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      alert('Cadastro enviado com sucesso!');
+      e.target.reset();
+    } else {
+      alert('Erro ao enviar cadastro.');
+    }
+  });
+</script>
+
+</body>
+</html>

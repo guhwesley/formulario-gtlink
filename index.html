@@ -61,10 +61,6 @@
       font-weight: normal;
     }
 
-    .planos {
-      margin-top: 10px;
-    }
-
     .plano {
       border: 1px solid #ffa500;
       border-radius: 6px;
@@ -73,18 +69,8 @@
       color: #fff;
     }
 
-    .plano label {
-      color: #fff;
-      font-weight: normal;
-    }
-
     .plano strong {
       color: #ffa500;
-    }
-
-    .plano input {
-      width: auto;
-      margin-right: 8px;
     }
 
     button {
@@ -108,8 +94,10 @@
 <body>
 
 <div class="form-container">
+
+  <!-- LOGO -->
   <div class="logo">
-    <img src="https://i.postimg.cc/9M8QBJRs/logopretaebranco.png">
+    <img src="https://i.postimg.cc/9M8QBJRs/logopretaebranco.png" alt="GTLINK">
   </div>
 
   <h2>Cadastro de Cliente</h2>
@@ -123,7 +111,14 @@
     <input type="text" name="cpf" maxlength="14" required>
 
     <label>Data de nascimento</label>
-    <input type="text" name="data_nascimento" placeholder="DD/MM/AAAA" maxlength="10" required>
+    <input
+      type="text"
+      name="data_nascimento"
+      id="dataNascimento"
+      placeholder="DD/MM/AAAA"
+      maxlength="10"
+      required
+    >
 
     <label>Email</label>
     <input type="email" name="email" required>
@@ -135,46 +130,90 @@
     <input type="text" name="cep" maxlength="9" required>
 
     <label>Telefone</label>
-    <input type="text" name="telefone" maxlength="15" required>
+    <input
+      type="text"
+      name="telefone"
+      id="telefone"
+      placeholder="+55 (__) 9____-____"
+      required
+    >
 
     <label>Dia de vencimento</label>
     <input type="number" name="dia_vencimento" min="1" max="31" required>
 
     <label>Plano desejado</label>
-    <div class="planos">
 
-      <div class="plano">
-        <label>
-          <input type="radio" name="plano" value="200MB - R$70 - Fibra Óptica" required>
-          🛜 <strong>200MB</strong> — R$ 70,00<br>
-          100% Fibra Óptica
-        </label>
-      </div>
+    <div class="plano">
+      <label>
+        <input type="radio" name="plano" required>
+        🛜 <strong>200MB</strong> — R$ 70,00<br>
+        100% Fibra Óptica
+      </label>
+    </div>
 
-      <div class="plano">
-        <label>
-          <input type="radio" name="plano" value="400MB - R$80 - Fibra Óptica">
-          🛜 <strong>400MB</strong> — R$ 80,00<br>
-          100% Fibra Óptica
-        </label>
-      </div>
+    <div class="plano">
+      <label>
+        <input type="radio" name="plano">
+        🛜 <strong>400MB</strong> — R$ 80,00<br>
+        100% Fibra Óptica
+      </label>
+    </div>
 
-      <div class="plano">
-        <label>
-          <input type="radio" name="plano" value="700MB - R$100 - Fibra Óptica + GTFLIX">
-          🛜 <strong>700MB</strong> — R$ 100,00<br>
-          100% Fibra Óptica<br>
-          🎁 Brinde: <strong>GTFLIX</strong>
-        </label>
-      </div>
-
+    <div class="plano">
+      <label>
+        <input type="radio" name="plano">
+        🛜 <strong>700MB</strong> — R$ 100,00<br>
+        100% Fibra Óptica<br>
+        🎁 <strong>GTFLIX</strong>
+      </label>
     </div>
 
     <button type="submit">Enviar cadastro</button>
-
   </form>
 </div>
 
-<!-- JS permanece igual ao seu original -->
+<script>
+  /* ===============================
+     MÁSCARA TELEFONE +55 (DD) 9XXXX-XXXX
+  =============================== */
+  const telefoneInput = document.getElementById('telefone');
+
+  telefoneInput.addEventListener('input', () => {
+    let numeros = telefoneInput.value.replace(/\D/g, '');
+
+    if (numeros.startsWith('55')) {
+      numeros = numeros.slice(2);
+    }
+
+    numeros = numeros.slice(0, 11);
+    let f = '+55 ';
+
+    if (numeros.length > 0) f += '(' + numeros.slice(0, 2);
+    if (numeros.length >= 3) f += ') ' + numeros.slice(2, 3);
+    if (numeros.length >= 7) f += numeros.slice(3, 7);
+    else if (numeros.length > 3) f += numeros.slice(3);
+    if (numeros.length >= 8) f += '-' + numeros.slice(7, 11);
+
+    telefoneInput.value = f;
+  });
+
+  /* ===============================
+     MÁSCARA DATA DD/MM/AAAA
+  =============================== */
+  const dataInput = document.getElementById('dataNascimento');
+
+  dataInput.addEventListener('input', () => {
+    let v = dataInput.value.replace(/\D/g, '').slice(0, 8);
+
+    if (v.length >= 5) {
+      dataInput.value = v.slice(0,2) + '/' + v.slice(2,4) + '/' + v.slice(4);
+    } else if (v.length >= 3) {
+      dataInput.value = v.slice(0,2) + '/' + v.slice(2);
+    } else {
+      dataInput.value = v;
+    }
+  });
+</script>
+
 </body>
 </html>

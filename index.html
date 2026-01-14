@@ -87,22 +87,41 @@
       margin-right: 8px;
     }
 
-    button {
-      margin-top: 25px;
-      width: 100%;
-      padding: 12px;
-      background: #ffa500;
-      color: #000;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+  button {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 18px;
+  background: #ffa500;
+  color: #000;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1000;
+}
 
-    button:hover {
-      background: #ff8c00;
-    }
+button:hover {
+  background: #ff8c00;
+}
+
+/* Espaço extra para não cobrir campos */
+.form-container {
+  padding-bottom: 90px;
+}
+
+/* Animação suave */
+input, .plano {
+  transition: all 0.25s ease;
+}
+
+input:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 2px rgba(255,165,0,0.4);
+  outline: none;
+}
+
   </style>
 </head>
 <body>
@@ -143,7 +162,15 @@
   >
   Telefone ( WhatsApp )
 </label>
-    <input type="text" name="telefone" maxlength="15" required>
+    <input
+  type="text"
+  name="telefone"
+  inputmode="numeric"
+  placeholder="+55 (DD) 9XXXX-XXXX"
+  maxlength="19"
+  required
+>
+
 
     <label>Dia de vencimento</label>
     <input type="number" name="dia_vencimento" min="1" max="31" required>
@@ -183,6 +210,7 @@
   </form>
 </div>
 
+
 <!-- ✅ MÁSCARAS (ÚNICA ADIÇÃO) -->
 <script>
   /* DATA DD/MM/AAAA */
@@ -198,24 +226,71 @@
     }
   });
 
-  /* TELEFONE +55 (DD) 9XXXX-XXXX */
-  const telInput = document.querySelector('input[name="telefone"]');
-  telInput.addEventListener('input', () => {
-    let n = telInput.value.replace(/\D/g, '');
+// Máscara Telefone
 
-    if (n.startsWith('55')) n = n.slice(2);
-    n = n.slice(0, 11);
+const telefoneInput = document.querySelector('input[name="telefone"]');
 
-    let f = '+55 ';
-    if (n.length > 0) f += '(' + n.slice(0,2);
-    if (n.length >= 3) f += ') ' + n.slice(2,3);
-    if (n.length >= 7) f += n.slice(3,7);
-    else if (n.length > 3) f += n.slice(3);
-    if (n.length >= 8) f += '-' + n.slice(7);
+telefoneInput.addEventListener('input', () => {
+  let v = telefoneInput.value.replace(/\D/g, '');
 
-    telInput.value = f;
+  // remove 55 se o usuário tentar digitar
+  if (v.startsWith('55')) {
+    v = v.slice(2);
+  }
+
+  // limita a DDD (2) + número (9)
+  v = v.slice(0, 13);
+
+  let formatado = '+55 ';
+
+  if (v.length > 0) {
+    formatado += '(' + v.slice(0, 2);
+  }
+
+  if (v.length >= 3) {
+    formatado += ') ';
+  }
+
+  if (v.length >= 3 && v.length <= 7) {
+    formatado += v.slice(2);
+  }
+
+  if (v.length >= 8) {
+    formatado +=
+      v.slice(2, 7) + '-' + v.slice(7, 13);
+  }
+
+  telefoneInput.value = formatado;
+});
+
+
+  /* CPF 000.000.000-00 */
+  const cpfInput = document.querySelector('input[name="cpf"]');
+
+  cpfInput.addEventListener('input', () => {
+    let v = cpfInput.value.replace(/\D/g, '').slice(0, 11);
+
+    if (v.length >= 10) {
+      cpfInput.value =
+        v.slice(0, 3) + '.' +
+        v.slice(3, 6) + '.' +
+        v.slice(6, 9) + '-' +
+        v.slice(9, 11);
+    } else if (v.length >= 7) {
+      cpfInput.value =
+        v.slice(0, 3) + '.' +
+        v.slice(3, 6) + '.' +
+        v.slice(6);
+    } else if (v.length >= 4) {
+      cpfInput.value =
+        v.slice(0, 3) + '.' +
+        v.slice(3);
+    } else {
+      cpfInput.value = v;
+    }
   });
 </script>
 
 </body>
 </html>
+
